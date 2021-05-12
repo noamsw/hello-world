@@ -1,0 +1,24 @@
+CC = gcc
+OBJS = event_manager.o priority_queue.o date.o
+EXEC = priority_queue event_manager
+DEBUG_FLAG = -DNDBUG
+COM_FLAG = -std=c99 -Wall -pedantic-errors -Werror $(DEBUG_FLAG)
+
+$(EXEC): $(OBJS) priority_queue_tests.o
+	$(CC) $(COM_FLAG) $(OBJS) priority_queue_tests.o -o priority_queue
+$(EXEC): $(OBJS) event_manager_tests.o
+	$(CC) $(COM_FLAG) $(OBJS) event_manager_tests.o -o event_manager
+priority_queue.o: priority_queue.c priority_queue.h 
+	$(CC) -c $(COM_FLAG) $*.c
+event_manager.o: event_manager.c event_manager.h date.c date.h
+	$(CC) -c $(COM_FLAG) $*.c
+date.o: date.c date.h
+	$(CC) -c $(COM_FLAG) $*.c
+priority_queue_tests.o: tests/test_utilities.h priority_queue.h tests/priority_queue_tests.c
+	$(CC) -c $(COM_FLAG) tests/priority_queue_tests.c
+event_manager_tests.o: tests/test_utilities.h event_manager.h date.h tests/event_manager_tests.c
+	$(CC) -c $(COM_FLAG) tests/event_manager_tests.c
+clean:
+	rm -f $(OBJS) priority_queue_tests.o $(EXEC)
+	rm -f $(OBJS) event_manager_tests.o $(EXEC)
+	
